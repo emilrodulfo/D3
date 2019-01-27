@@ -136,12 +136,15 @@ d3.csv("assets/data/data.csv").then (function(stateData) {
 
     // parse data
     stateData.forEach(function(data) {
+      var abbr = data.abbr.toString();
       data.poverty = +data.poverty;
       data.age = +data.age;
       data.income = +data.income;
       data.noHealthInsurance = +data.noHealthInsurance;
       data.obesity = +data.obesity;
       data.smokes = +data.smokes;
+
+      abbr = +abbr;
     });
   
     // xLinearScale function above csv import
@@ -174,7 +177,26 @@ d3.csv("assets/data/data.csv").then (function(stateData) {
       .attr("r", 10)
       .attr("fill", "blue")
       .attr("opacity", ".2");
-  
+
+    chartGroup.append("text")
+      .style("text-anchor", "middle")
+      .attr("fill", "white")
+      .style("font-weight", "bold")
+      .style("font-size", "8px")
+      .selectAll("tspan")
+      .data(stateData)
+      .enter()
+      .append("tspan")
+      .attr("x", function(data) {
+          return xLinearScale(data[chosenXAxis]);
+      })
+      .attr("y", function(data) {
+          return yLinearScale(data[chosenYAxis]);
+      })
+      .text(function(data) {
+          return data.abbr.toString()
+      });
+
     // Create group for  3 x- axis labels
     var labelsGroupX = chartGroup.append("g")
       .attr("transform", `translate(${width / 2}, ${height + 20})`);
